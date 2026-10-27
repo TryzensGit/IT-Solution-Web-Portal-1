@@ -1,6 +1,6 @@
 # TISA Intelligent IT Solutions Portal
 
-A central web portal for AI-powered IT services. It presents the platform's solutions and gives one front door to three existing applications: User Management, IT Asset Management and the TISA Support Assistant (Technical Information Support Assistant), a Microsoft Teams bot that gives employees first-line IT support: it answers from the internal knowledge base, reads screenshots, raises Jira tickets when it cannot resolve an issue, and reports ticket updates on request. Every launch action in the portal currently opens an in-portal demo with sample data: working copies of User Management and Asset Management, and a simulated support assistant chat. The real application URLs can still be configured and are kept on each catalog entry for reference, but the UI does not link to them.
+A central web portal for AI-powered IT services. It presents the platform's solutions and gives one front door to three existing applications: User Management, IT Asset Management and the TISA Support Assistant (Technical Information Support Assistant), a Microsoft Teams bot that gives employees first-line IT support: it answers from the internal knowledge base, reads screenshots, raises Jira tickets when it cannot resolve an issue, and reports ticket updates on request. Every launch action in the portal currently opens an in-portal demo with sample data: working copies of User Management and Asset Management, and a simulated support assistant chat. Pointing an entry at a live application again is a one-line change described under Configuration.
 
 ## Stack
 
@@ -15,7 +15,7 @@ A central web portal for AI-powered IT services. It presents the platform's solu
 
 ```bash
 npm install
-cp .env.example .env     # then fill in the application URLs
+cp .env.example .env     # optional: status labels, branding, contact card
 npm run dev              # http://localhost:5173
 ```
 
@@ -28,16 +28,13 @@ npm test           # run the test suite once
 npm run typecheck  # tsc only
 ```
 
-## Configuring the application links
+## Configuration
 
-The live application URLs come from environment variables read in `src/config/applications.ts` and are stored on each entry as `liveUrl`. At present every entry's `destination` is its demo route, so the live URLs are reference only; switch an entry's `destination` back to `{ type: 'external', url: liveUrl }` to launch the real application again.
+Every application launches its in-portal demo, so no application URLs are needed. The optional environment variables below tune labels, branding and the contact card. Copy `.env.example` to `.env` and fill in what you want.
 
 | Variable | Purpose |
 | --- | --- |
-| `VITE_USER_MANAGEMENT_URL` | Destination for the User Management application |
-| `VITE_ASSET_MANAGEMENT_URL` | Destination for the Asset Management application |
-| `VITE_TISA_TEAMS_URL` | Destination for the support assistant bot (a Teams deep link or its public address). Reference only while launches go to the demo |
-| `VITE_*_STATUS` (optional) | `available`, `maintenance` or `coming-soon`. Leave empty to hide the indicator |
+| `VITE_USER_MANAGEMENT_STATUS`, `VITE_ASSET_MANAGEMENT_STATUS`, `VITE_TISA_TEAMS_STATUS` (optional) | `available`, `maintenance` or `coming-soon`. Leave empty to hide the indicator. These are configured labels, not live health checks |
 | `VITE_BRAND_NAME`, `VITE_BRAND_TAGLINE` (optional) | Override the brand name and tagline |
 | `VITE_CONTACT_NAME` (optional) | Team name on the contact card, default "IT solutions team" |
 | `VITE_CONTACT_EMAIL` (optional) | Email for setup enquiries; rendered as a mailto link with a prefilled subject |
@@ -47,21 +44,20 @@ The live application URLs come from environment variables read in `src/config/ap
 
 The contact card (home page and `/solutions`, anchor `#contact`) shows whichever channels are set. With none set it shows a "not configured" message rather than invented details. Values are validated in `src/config/contact.ts`.
 
-Rules enforced by `src/lib/url.ts`:
+Vite reads `.env` at build time, so rebuild after changing values. Hosting platforms such as Cloudflare Pages need the same variables set in their build settings.
+
+### Pointing an application at a live system
+
+Each catalog entry in `src/config/applications.ts` has a `destination`. It is currently the demo route (`{ type: 'internal', url: '/demo/...' }`). To launch a real application instead, set it to `{ type: 'external', url: 'https://...' }`; the launcher then opens it in a new tab with `rel="noopener noreferrer"`. Rules enforced by `src/lib/url.ts`:
 
 - External destinations must be absolute `https://` URLs. Plain `http://` is accepted only for `localhost`.
 - Internal destinations must be root-relative paths (`/something`).
 - Anything else (`javascript:`, `data:`, protocol-relative, malformed) is rejected and the card shows a "not configured" message instead of a link.
-
-Vite reads `.env` at build time, so rebuild after changing values. A missing URL does not break the build; the portal shows a helpful message in place of the launch button.
-
-Status labels are static configuration. The portal does not perform live health checks.
-
 ## Adding an application
 
 1. Add an entry to the `applications` array in `src/config/applications.ts` (id, name, summary, description, icon, category, destination, capabilities, launch label).
 2. If it needs a new icon, add it to the map in `src/components/ui/AppIcon.tsx`.
-3. Add the matching `VITE_..._URL` variable to `.env.example` and your `.env`.
+3. Give it a `destination`: an in-portal demo route, or an `https://` URL for a live application.
 
 The launcher grid, the `/applications` index, the footer, the `/applications/<id>` launch page and the hero visual are all generated from the catalog. No new route or page component is needed. Categories appear on the index only once more than one category has applications.
 
@@ -165,7 +161,7 @@ When Microsoft Entra ID or another SSO provider is added, keep tokens out of URL
 
 ## Recommended next steps
 
-1. Set the three application URLs and, if wanted, their status labels.
+1. Decide when to point each catalog entry at its live application instead of the demo, and set status labels if wanted.
 2. Confirm the capability bullets for each application match what the applications really do.
 3. Decide on authentication (for example Microsoft Entra ID) and whether launch links should be protected.
 4. Add a health-check integration only if a reliable status endpoint exists.

@@ -7,10 +7,11 @@ import type { IconName } from '../components/ui/AppIcon'
  * /applications index and the /applications/:slug launch page are all
  * generated from this list.
  *
- * Every application currently launches its in-portal demo (`demo.path`),
- * so visitors never leave the portal or reach a real system. The live
- * destinations from the environment are kept on `liveUrl` for reference
- * and are not used by the UI.
+ * Every application launches its in-portal demo (`demo.path`), so visitors
+ * never leave the portal or reach a real system. To point an entry at a
+ * live application instead, set `destination` to
+ * `{ type: 'external', url: 'https://...' }`; the URL is validated in
+ * src/lib/url.ts and opens in a new tab.
  */
 
 export type AppStatus = 'available' | 'maintenance' | 'coming-soon'
@@ -61,8 +62,6 @@ export interface AppDefinition {
   launchNote?: string
   /** Self-contained demo of the application inside the portal. */
   demo: AppDemo
-  /** Configured live destination, kept for reference only. Not used by the UI. */
-  liveUrl?: string
 }
 
 export const categories: AppCategory[] = [
@@ -79,11 +78,6 @@ export function readStatus(value: string | undefined): AppStatus | undefined {
   return undefined
 }
 
-function readUrl(value: string | undefined): string | undefined {
-  const v = value?.trim()
-  return v ? v : undefined
-}
-
 const SIGN_IN_NOTE = 'Sample data only. Sign in with the demo accounts on the details page.'
 
 export const applications: AppDefinition[] = [
@@ -96,7 +90,6 @@ export const applications: AppDefinition[] = [
     icon: 'users',
     category: 'identity-access',
     destination: { type: 'internal', url: '/demo/user-management' },
-    liveUrl: readUrl(import.meta.env.VITE_USER_MANAGEMENT_URL),
     status: readStatus(import.meta.env.VITE_USER_MANAGEMENT_STATUS),
     capabilities: [
       { title: 'Onboarding', detail: 'Set up new users with the accounts, devices and services they need from day one.' },
@@ -125,7 +118,6 @@ export const applications: AppDefinition[] = [
     icon: 'monitor',
     category: 'endpoint-management',
     destination: { type: 'internal', url: '/demo/asset-management' },
-    liveUrl: readUrl(import.meta.env.VITE_ASSET_MANAGEMENT_URL),
     status: readStatus(import.meta.env.VITE_ASSET_MANAGEMENT_STATUS),
     capabilities: [
       {
@@ -157,7 +149,6 @@ export const applications: AppDefinition[] = [
     icon: 'bot',
     category: 'ai-automation',
     destination: { type: 'internal', url: '/demo/tisa-assistant' },
-    liveUrl: readUrl(import.meta.env.VITE_TISA_TEAMS_URL),
     status: readStatus(import.meta.env.VITE_TISA_TEAMS_STATUS),
     capabilities: [
       {
