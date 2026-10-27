@@ -7,7 +7,14 @@ type Size = 'md' | 'lg'
 const base =
   'inline-flex items-center justify-center gap-2 rounded-md font-medium whitespace-nowrap select-none ' +
   'transition-[background-color,border-color,color,box-shadow,transform] duration-150 ease-[var(--ease-standard)] ' +
-  'active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 disabled:active:scale-100'
+  'disabled:cursor-not-allowed disabled:opacity-60'
+
+/**
+ * Press feedback. Kept separate because a transform turns the element into
+ * the containing block for its own pseudo-elements, which breaks links that
+ * are stretched over a card with an absolutely positioned ::after.
+ */
+const press = 'active:scale-[0.98] disabled:active:scale-100'
 
 const variants: Record<Variant, string> = {
   primary:
@@ -22,8 +29,14 @@ const sizes: Record<Size, string> = {
   lg: 'h-11 px-5 text-[0.95rem]',
 }
 
-export function buttonClasses(variant: Variant = 'primary', size: Size = 'md', extra = '') {
-  return `${base} ${variants[variant]} ${sizes[size]} ${extra}`.trim()
+export function buttonClasses(
+  variant: Variant = 'primary',
+  size: Size = 'md',
+  extra = '',
+  options: { press?: boolean } = {},
+) {
+  const { press: withPress = true } = options
+  return `${base} ${withPress ? press : ''} ${variants[variant]} ${sizes[size]} ${extra}`.replace(/\s+/g, ' ').trim()
 }
 
 interface CommonProps {

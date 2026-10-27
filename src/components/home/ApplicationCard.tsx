@@ -48,13 +48,22 @@ export function ApplicationCard({ app, hideDetails = false }: Props) {
       <p className="mt-2 flex-1 text-[0.95rem] leading-relaxed text-muted">{app.summary}</p>
 
       <div className="mt-6 flex items-center justify-between gap-3">
+        {/*
+          The link is stretched over the card with an absolutely positioned
+          ::after. It must not get the press transform: a transform makes the
+          link the containing block for that pseudo-element, which shrinks the
+          hit area between mousedown and mouseup so the click never fires.
+          The card itself animates on launch instead.
+        */}
         {launch.href ? (
           <a
             href={launch.href}
             target={launch.external ? '_blank' : undefined}
             rel={launch.external ? 'noopener noreferrer' : undefined}
             onClick={onLaunch}
-            className={buttonClasses('primary', 'md', 'after:absolute after:inset-0 after:rounded-xl after:content-[""]')}
+            className={buttonClasses('primary', 'md', 'after:absolute after:inset-0 after:rounded-xl after:content-[""]', {
+              press: false,
+            })}
             aria-describedby={app.launchNote ? `${messageId}-note` : undefined}
           >
             {launching ? (
