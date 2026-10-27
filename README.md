@@ -1,6 +1,6 @@
 # TISA Intelligent IT Solutions Portal
 
-A central web portal for AI-powered IT services. It presents the platform's solutions and gives one front door to three existing applications: User Management, IT Asset Management and the TISA AI Chatbot, which configures and installs enterprise Azure and Microsoft Teams from a conversation. The portal links to the real applications through configurable URLs. It also ships self-contained demo copies of User Management and Asset Management with sample data (see below).
+A central web portal for AI-powered IT services. It presents the platform's solutions and gives one front door to three existing applications: User Management, IT Asset Management and the TISA Support Assistant (Technical Information Support Assistant), a Microsoft Teams bot that gives employees first-line IT support: it answers from the internal knowledge base, reads screenshots, raises Jira tickets when it cannot resolve an issue, and reports ticket updates on request. Every launch action in the portal currently opens an in-portal demo with sample data: working copies of User Management and Asset Management, and a simulated support assistant chat. The real application URLs can still be configured and are kept on each catalog entry for reference, but the UI does not link to them.
 
 ## Stack
 
@@ -30,13 +30,13 @@ npm run typecheck  # tsc only
 
 ## Configuring the application links
 
-All destinations come from environment variables read in `src/config/applications.ts`. Nothing else in the UI hardcodes a URL.
+The live application URLs come from environment variables read in `src/config/applications.ts` and are stored on each entry as `liveUrl`. At present every entry's `destination` is its demo route, so the live URLs are reference only; switch an entry's `destination` back to `{ type: 'external', url: liveUrl }` to launch the real application again.
 
 | Variable | Purpose |
 | --- | --- |
 | `VITE_USER_MANAGEMENT_URL` | Destination for the User Management application |
 | `VITE_ASSET_MANAGEMENT_URL` | Destination for the Asset Management application |
-| `VITE_TISA_TEAMS_URL` | Destination for the AI chatbot, normally a Microsoft Teams deep link |
+| `VITE_TISA_TEAMS_URL` | Destination for the support assistant bot (a Teams deep link or its public address). Reference only while launches go to the demo |
 | `VITE_*_STATUS` (optional) | `available`, `maintenance` or `coming-soon`. Leave empty to hide the indicator |
 | `VITE_BRAND_NAME`, `VITE_BRAND_TAGLINE` (optional) | Override the brand name and tagline |
 | `VITE_CONTACT_NAME` (optional) | Team name on the contact card, default "IT solutions team" |
@@ -81,6 +81,7 @@ Two of the catalog applications have working demo copies inside the portal, so v
 | Demo | Route | Modelled on |
 | --- | --- | --- |
 | User Management | `/demo/user-management` | The Flask User Management app: active and offboarded users, AD users, cloud-only Entra ID users, AD and M365 groups, license pool and assignments, scheduled tasks, audit log, organisation settings |
+| TISA Support Assistant | `/demo/tisa-assistant` | A simulated Teams chat that follows the real bot's flow: acknowledge first, search a fictional knowledge base, triage (category, priority, summary), reply with a card offering Resolved, Create ticket or Escalate, create fictional Jira tickets (`TBTH-`) and report their updates on request. Sample screenshots are drawn SVGs. No sign-in, nothing real is touched. The engine is in `src/demo/chatbot/engine.ts` |
 | IT Asset Inventory | `/demo/asset-management` | The Flask Asset Management portal: dashboard with KPI tiles and breakdowns, searchable and filterable asset table with colour flags and column manager, add/edit/details, audit log, settings (colour index, import/export, reference lists, integrations, danger zone) |
 
 How they work:
@@ -104,14 +105,15 @@ Behaviour: the strip pauses on hover, on keyboard focus and with the pause butto
 
 | Route | Page |
 | --- | --- |
-| `/` | Home: hero, application launcher, chatbot promotion, solutions, principles, how it works, trusted-by strip, contact card, call to action |
+| `/` | Home: hero, application launcher, support assistant promotion, solutions, principles, how it works, trusted-by strip, contact card, call to action |
 | `/solutions` | Full solutions overview |
 | `/applications` | Application index, with recently opened applications |
 | `/applications/user-management` | User Management overview and launch |
 | `/applications/asset-management` | Asset Management overview and launch |
-| `/applications/tisa-assistant` | TISA AI Chatbot overview and launch |
+| `/applications/tisa-assistant` | TISA Support Assistant overview and launch |
 | `/demo/user-management` | User Management demo (sign-in, then the application) |
 | `/demo/asset-management` | Asset Management demo (sign-in, then the application) |
+| `/demo/tisa-assistant` | Simulated support assistant chat (no sign-in) |
 
 `/#solutions` and `/#applications` scroll to the matching sections on the home page.
 
@@ -159,7 +161,7 @@ When Microsoft Entra ID or another SSO provider is added, keep tokens out of URL
 - Application status is a configured label, not a live check.
 - "Recently opened" is stored per browser in `localStorage` (application ids only) and is not synced.
 - There is no application search. With three applications it would add noise; the catalog structure supports adding one later.
-- The chatbot page and the home page promotion describe the chatbot and show illustrative sessions. The real chatbot runs in Microsoft Teams at the configured URL; the portal does not run it.
+- The support assistant demo is scripted: keyword matching against nine fictional articles stands in for the real bot's knowledge base search and local LLM triage, and ticket progress is simulated. It is a product illustration, not the bot itself.
 
 ## Recommended next steps
 

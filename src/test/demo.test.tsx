@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { ThemeProvider } from '../theme/ThemeProvider'
 import { App } from '../App'
 import { demoCredentials } from '../config/demo'
+import { applications } from '../config/applications'
 import { authenticate } from '../demo/shared/session'
 import { seedAssets } from '../demo/asset-management/data'
 
@@ -47,19 +48,39 @@ describe('demo credentials', () => {
     expect(within(card).getByText(admin.username)).toBeInTheDocument()
     expect(within(card).getByText(admin.password)).toBeInTheDocument()
     expect(within(card).getByText(user.username)).toBeInTheDocument()
-    expect(within(card).getByRole('link', { name: /open the demo/i })).toHaveAttribute('href', '/demo/asset-management')
+    expect(screen.getByRole('link', { name: /open demo/i })).toHaveAttribute('href', '/demo/asset-management')
   })
 
-  it('are not shown for applications without a demo', () => {
+  it('are not shown for the chatbot demo, which needs no sign-in', () => {
     renderAt('/applications/tisa-assistant')
-    expect(screen.queryByRole('region', { name: /in a demo/i })).not.toBeInTheDocument()
+    const card = screen.getByRole('region', { name: /try tisa support assistant in a demo/i })
+    expect(within(card).queryByText(admin.password)).not.toBeInTheDocument()
+    expect(within(card).getByText(/no sign-in is needed/i)).toBeInTheDocument()
+  })
+})
+
+describe('launch actions go to the demos', () => {
+  it('every catalog entry launches its in-portal demo rather than an external site', () => {
+    for (const app of applications) {
+      expect(app.destination).toEqual({ type: 'internal', url: app.demo.path })
+      expect(app.demo.path.startsWith('/demo/')).toBe(true)
+    }
+  })
+
+  it('the launcher card primary action is a router link to the demo', () => {
+    renderAt('/')
+    const links = screen.getAllByRole('link', { name: /open demo/i })
+    const link = links.find((l) => l.getAttribute('href') === '/demo/asset-management')
+    expect(link).toBeDefined()
+    expect(link).not.toHaveAttribute('target')
+    expect(screen.queryByRole('link', { name: /try the asset management demo/i })).not.toBeInTheDocument()
   })
 })
 
 describe('Asset Management demo', () => {
   it('shows a login page without a company logo and rejects bad credentials', async () => {
     renderAt('/demo/asset-management')
-    expect(await screen.findByRole('heading', { level: 1, name: /it asset inventory/i })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: /it asset inventory/i }, { timeout: 5000 })).toBeInTheDocument()
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
     await signIn(admin.username, 'nope')
     expect(screen.getByRole('alert')).toHaveTextContent(/invalid username or password/i)
@@ -67,7 +88,7 @@ describe('Asset Management demo', () => {
 
   it('signs in as admin with the audit log and lets you add an asset', async () => {
     renderAt('/demo/asset-management')
-    await screen.findByRole('heading', { level: 1 })
+    await screen.findByRole('heading', { level: 1 }, { timeout: 5000 })
     const u = await signIn(admin.username, admin.password)
     expect(screen.getByRole('tab', { name: /audit log/i })).toBeInTheDocument()
     expect(screen.getByText(/demo environment with sample data only/i)).toBeInTheDocument()
@@ -89,7 +110,7 @@ describe('Asset Management demo', () => {
 
   it('hides the audit log and settings from a standard user', async () => {
     renderAt('/demo/asset-management')
-    await screen.findByRole('heading', { level: 1 })
+    await screen.findByRole('heading', { level: 1 }, { timeout: 5000 })
     const u = await signIn(user.username, user.password)
     expect(screen.queryByRole('tab', { name: /audit log/i })).not.toBeInTheDocument()
     await u.click(screen.getByRole('button', { name: /demo user/i }))
@@ -101,7 +122,7 @@ describe('Asset Management demo', () => {
 describe('User Management demo', () => {
   it('signs in and shows the lifecycle tabs, with audit for admins only', async () => {
     renderAt('/demo/user-management')
-    expect(await screen.findByRole('heading', { level: 1, name: /user management/i })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: /user management/i }, { timeout: 5000 })).toBeInTheDocument()
     const u = await signIn(admin.username, admin.password)
     for (const tab of ['Active', 'Offboarded', 'AD Users', 'Entra ID Users', 'Groups', 'Licenses', 'Scheduled', 'Audit']) {
       expect(screen.getByRole('tab', { name: tab })).toBeInTheDocument()
@@ -121,7 +142,7 @@ describe('User Management demo', () => {
 
   it('limits a standard user to AD-only onboarding', async () => {
     renderAt('/demo/user-management')
-    await screen.findByRole('heading', { level: 1 })
+    await screen.findByRole('heading', { level: 1 }, { timeout: 5000 })
     const u = await signIn(user.username, user.password)
     expect(screen.queryByRole('tab', { name: 'Audit' })).not.toBeInTheDocument()
     await u.click(screen.getByRole('button', { name: /onboard user/i }))

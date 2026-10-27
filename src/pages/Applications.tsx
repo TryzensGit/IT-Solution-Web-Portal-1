@@ -27,7 +27,7 @@ export function Applications() {
       <SectionHeading
         as="h1"
         title="Applications"
-        lead="Everything available from the portal. Each application opens in its own tab and asks for its own sign-in."
+        lead="Everything available from the portal. Each application opens as a demo inside the portal, with sample data and its own sign-in where the real application has one."
       />
 
       {recentApps.length > 0 && (

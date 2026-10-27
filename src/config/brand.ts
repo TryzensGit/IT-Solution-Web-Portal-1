@@ -12,6 +12,6 @@ export const brand = {
     import.meta.env.VITE_BRAND_TAGLINE?.trim() ||
     'Smarter IT. Intelligent Automation. Better Experiences.',
   description:
-    'Transform IT operations with intelligent automation, an AI chatbot that sets up Azure and Microsoft Teams, and streamlined management tools.',
-  assistantName: `${name} AI Chatbot`,
+    'Transform IT operations with intelligent automation, a support assistant that answers in Microsoft Teams, and streamlined management tools.',
+  assistantName: `${name} Support Assistant`,
 } as const

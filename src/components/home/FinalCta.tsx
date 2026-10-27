@@ -28,7 +28,7 @@ export function FinalCta() {
               <ArrowRight className="size-4" aria-hidden="true" />
             </Button>
             <Button to="/applications/tisa-assistant" size="lg" variant="secondary">
-              Meet the AI chatbot
+              Meet the support assistant
             </Button>
           </div>
         </div>

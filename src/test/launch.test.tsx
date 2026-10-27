@@ -18,6 +18,7 @@ const base: AppDefinition = {
   capabilities: [{ title: 'x', detail: 'y' }],
   launchLabel: 'Open Demo',
   launchNote: 'Opens in a new tab',
+  demo: { path: '/demo/demo', summary: 'A demo.', signIn: false },
 }
 
 function renderCard(app: AppDefinition) {

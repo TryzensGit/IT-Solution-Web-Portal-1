@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, ArrowRight, Check, ExternalLink, FlaskConical, Info, Loader2, Play } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, ExternalLink, FlaskConical, Info, Loader2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { getCategory, type AppDefinition } from '../../config/applications'
 import { demoCredentials, demoNotice } from '../../config/demo'
@@ -48,19 +48,15 @@ export function AppLaunchPage({ app }: { app: AppDefinition }) {
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             {launch.href ? (
-              <Button href={launch.href} size="lg" target={launch.external ? '_blank' : undefined} rel={launch.external ? 'noopener noreferrer' : undefined} onClick={onLaunch}>
-                {launching ? (
-                  <>
-                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                    Opening
-                  </>
-                ) : (
-                  <>
-                    {app.launchLabel}
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                  </>
-                )}
-              </Button>
+              launch.external ? (
+                <Button href={launch.href} size="lg" target="_blank" rel="noopener noreferrer" onClick={onLaunch}>
+                  <LaunchLabel app={app} launching={launching} />
+                </Button>
+              ) : (
+                <Button to={launch.href} size="lg" onClick={onLaunch}>
+                  <LaunchLabel app={app} launching={launching} />
+                </Button>
+              )
             ) : (
               <Button
                 size="lg"
@@ -73,16 +69,10 @@ export function AppLaunchPage({ app }: { app: AppDefinition }) {
                 {launch.blocked === 'coming-soon' ? 'Not yet available' : 'Destination not configured'}
               </Button>
             )}
-            {app.demo && (
-              <Button to={app.demo.path} size="lg" variant="secondary">
-                <Play className="size-4" aria-hidden="true" />
-                Try the demo
-              </Button>
-            )}
             {app.launchNote && launch.href && (
               <span className="inline-flex items-center gap-1.5 text-sm text-faint">
-                {launch.external && <ExternalLink className="size-3.5" aria-hidden="true" />}
-                {app.launchNote}
+                {launch.external ? <ExternalLink className="size-3.5" aria-hidden="true" /> : <FlaskConical className="size-3.5" aria-hidden="true" />}
+                {app.demo.signIn ? 'Sample data only. Sign in with the demo accounts listed on this page.' : app.launchNote}
               </span>
             )}
           </div>
@@ -122,21 +112,37 @@ export function AppLaunchPage({ app }: { app: AppDefinition }) {
             <AppVisual app={app} />
             {app.icon === 'bot' && (
               <p className="mt-4 text-sm leading-relaxed text-muted">
-                This page is an overview. The chatbot itself runs inside Microsoft Teams and opens from the launch button
-                above.
+                This page is an overview. The launch button opens a simulated chat; the real assistant runs inside
+                Microsoft Teams.
               </p>
             )}
           </Reveal>
-          {app.demo && <DemoCard app={app} />}
+          <DemoCard app={app} />
         </div>
       </div>
     </div>
   )
 }
 
-/** Explains the demo environment and lists the public demo accounts. */
+function LaunchLabel({ app, launching }: { app: AppDefinition; launching: boolean }) {
+  if (launching) {
+    return (
+      <>
+        <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+        Opening
+      </>
+    )
+  }
+  return (
+    <>
+      {app.launchLabel}
+      <ArrowRight className="size-4" aria-hidden="true" />
+    </>
+  )
+}
+
+/** Explains the demo environment and, where the demo has a sign-in, lists the public demo accounts. */
 function DemoCard({ app }: { app: AppDefinition }) {
-  if (!app.demo) return null
   return (
     <Reveal>
       <section className="surface-card p-5 sm:p-6" aria-labelledby={`demo-${app.id}`}>
@@ -152,9 +158,11 @@ function DemoCard({ app }: { app: AppDefinition }) {
           </div>
         </div>
 
-        <h3 className="mt-5 text-xs font-semibold uppercase tracking-wide text-faint">Demo accounts</h3>
-        <ul className="mt-2 divide-y divide-line rounded-md border border-line">
-          {demoCredentials.map((c) => (
+        {app.demo.signIn ? (
+          <>
+            <h3 className="mt-5 text-xs font-semibold uppercase tracking-wide text-faint">Demo accounts</h3>
+            <ul className="mt-2 divide-y divide-line rounded-md border border-line">
+              {demoCredentials.map((c) => (
             <li key={c.role} className="grid gap-x-4 gap-y-1 p-3 text-sm sm:grid-cols-[7.5rem_1fr]">
               <span className="font-medium">{c.label}</span>
               <span className="space-y-1">
@@ -171,17 +179,16 @@ function DemoCard({ app }: { app: AppDefinition }) {
                 <span className="block text-xs leading-relaxed text-muted">{c.access}</span>
               </span>
             </li>
-          ))}
-        </ul>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <p className="mt-4 text-sm text-muted">No sign-in is needed. The chat opens straight away.</p>
+        )}
 
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <Button to={app.demo.path}>
-            <Play className="size-4" aria-hidden="true" />
-            Open the demo
-          </Button>
-          <span className="text-xs text-faint">Opens inside the portal</span>
-        </div>
-        <p className="mt-4 text-xs leading-relaxed text-faint">{demoNotice}</p>
+        <p className="mt-4 text-xs leading-relaxed text-faint">
+          {demoNotice} Use the {app.launchLabel.toLowerCase()} button above to start.
+        </p>
       </section>
     </Reveal>
   )

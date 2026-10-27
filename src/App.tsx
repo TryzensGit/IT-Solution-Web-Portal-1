@@ -12,6 +12,7 @@ import { NotFound } from './pages/NotFound'
 // load on demand instead of weighing down the portal bundle.
 const UserDemo = lazy(() => import('./demo/user-management/UserDemo').then((m) => ({ default: m.UserDemo })))
 const AssetDemo = lazy(() => import('./demo/asset-management/AssetDemo').then((m) => ({ default: m.AssetDemo })))
+const ChatbotDemo = lazy(() => import('./demo/chatbot/ChatbotDemo').then((m) => ({ default: m.ChatbotDemo })))
 
 function DemoLoading() {
   return (
@@ -51,6 +52,14 @@ export function App() {
         element={
           <Suspense fallback={<DemoLoading />}>
             <AssetDemo />
+          </Suspense>
+        }
+      />
+      <Route
+        path="demo/tisa-assistant"
+        element={
+          <Suspense fallback={<DemoLoading />}>
+            <ChatbotDemo />
           </Suspense>
         }
       />

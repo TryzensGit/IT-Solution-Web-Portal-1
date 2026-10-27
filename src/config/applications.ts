@@ -5,8 +5,12 @@ import type { IconName } from '../components/ui/AppIcon'
  *
  * To add a new application, add an entry here. The launcher grid, the
  * /applications index and the /applications/:slug launch page are all
- * generated from this list. Destination URLs come from environment
- * variables so they are never hardcoded in components.
+ * generated from this list.
+ *
+ * Every application currently launches its in-portal demo (`demo.path`),
+ * so visitors never leave the portal or reach a real system. The live
+ * destinations from the environment are kept on `liveUrl` for reference
+ * and are not used by the UI.
  */
 
 export type AppStatus = 'available' | 'maintenance' | 'coming-soon'
@@ -21,6 +25,15 @@ export type AppCategoryId =
 export interface AppCategory {
   id: AppCategoryId
   label: string
+}
+
+export interface AppDemo {
+  /** Root-relative route of the demo. */
+  path: string
+  /** What the demo contains, shown on the launch page. */
+  summary: string
+  /** Whether the demo starts with a sign-in page using the public demo accounts. */
+  signIn: boolean
 }
 
 export interface AppDefinition {
@@ -46,11 +59,10 @@ export interface AppDefinition {
   launchLabel: string
   /** Short note displayed next to the launch action, e.g. where it opens. */
   launchNote?: string
-  /**
-   * Self-contained demo of the application inside the portal, with sample
-   * data and the public demo accounts from src/config/demo.ts.
-   */
-  demo?: { path: string; summary: string }
+  /** Self-contained demo of the application inside the portal. */
+  demo: AppDemo
+  /** Configured live destination, kept for reference only. Not used by the UI. */
+  liveUrl?: string
 }
 
 export const categories: AppCategory[] = [
@@ -72,16 +84,19 @@ function readUrl(value: string | undefined): string | undefined {
   return v ? v : undefined
 }
 
+const SIGN_IN_NOTE = 'Sample data only. Sign in with the demo accounts on the details page.'
+
 export const applications: AppDefinition[] = [
   {
     id: 'user-management',
     name: 'User Management',
     summary: 'Onboard and offboard people, and manage the IT services they depend on.',
     description:
-      'One place for the joiner and leaver work that keeps IT running: bringing new people on, giving them what they need, and closing everything down cleanly when they leave. Open the application to work with user records according to the permissions you already have.',
+      'One place for the joiner and leaver work that keeps IT running: bringing new people on, giving them what they need, and closing everything down cleanly when they leave. Open the demo to work with a fictional organisation using the demo accounts below.',
     icon: 'users',
     category: 'identity-access',
-    destination: { type: 'external', url: readUrl(import.meta.env.VITE_USER_MANAGEMENT_URL) },
+    destination: { type: 'internal', url: '/demo/user-management' },
+    liveUrl: readUrl(import.meta.env.VITE_USER_MANAGEMENT_URL),
     status: readStatus(import.meta.env.VITE_USER_MANAGEMENT_STATUS),
     capabilities: [
       { title: 'Onboarding', detail: 'Set up new users with the accounts, devices and services they need from day one.' },
@@ -92,10 +107,11 @@ export const applications: AppDefinition[] = [
       },
       { title: 'Role-aware access', detail: 'The application enforces its own authentication and permissions.' },
     ],
-    launchLabel: 'Open User Management',
-    launchNote: 'Opens in a new tab',
+    launchLabel: 'Open demo',
+    launchNote: SIGN_IN_NOTE,
     demo: {
       path: '/demo/user-management',
+      signIn: true,
       summary:
         'A working copy of the User Management screens with a fictional organisation: onboarding and offboarding, AD and Entra ID users, groups, licenses, scheduled tasks and the audit log.',
     },
@@ -105,10 +121,11 @@ export const applications: AppDefinition[] = [
     name: 'Asset Management',
     summary: 'Track laptops, servers, workstations, mobile devices and the services behind them.',
     description:
-      'The inventory of what your organisation runs on, from the laptop on a desk to the servers, virtual machines and storage behind the scenes. Open the application to onboard, assign, track and retire IT resources.',
+      'The inventory of what your organisation runs on, from the laptop on a desk to the servers, virtual machines and storage behind the scenes. Open the demo to onboard, assign, track and retire a sample fleet using the demo accounts below.',
     icon: 'monitor',
     category: 'endpoint-management',
-    destination: { type: 'external', url: readUrl(import.meta.env.VITE_ASSET_MANAGEMENT_URL) },
+    destination: { type: 'internal', url: '/demo/asset-management' },
+    liveUrl: readUrl(import.meta.env.VITE_ASSET_MANAGEMENT_URL),
     status: readStatus(import.meta.env.VITE_ASSET_MANAGEMENT_STATUS),
     capabilities: [
       {
@@ -122,44 +139,60 @@ export const applications: AppDefinition[] = [
       { title: 'Onboarding and offboarding', detail: 'Bring resources into service and retire them with a clear record.' },
       { title: 'Lifecycle tracking', detail: 'Follow each resource from procurement through assignment to retirement.' },
     ],
-    launchLabel: 'Open Asset Management',
-    launchNote: 'Opens in a new tab',
+    launchLabel: 'Open demo',
+    launchNote: SIGN_IN_NOTE,
     demo: {
       path: '/demo/asset-management',
+      signIn: true,
       summary:
         'A working copy of the IT Asset Inventory with a sample fleet: dashboard, searchable asset table with colour flags, add and edit forms, audit log and settings.',
     },
   },
   {
     id: 'tisa-assistant',
-    name: 'TISA AI Chatbot',
-    summary: 'Configure and install enterprise Azure and Microsoft Teams from a chat.',
+    name: 'TISA Support Assistant',
+    summary: 'First-line IT support in Microsoft Teams: answers from the knowledge base, raises Jira tickets, reports updates.',
     description:
-      'More than an assistant: a chatbot that sets up and configures enterprise Azure environments and Microsoft Teams through conversation. Describe what the organisation needs and it prepares resource groups, virtual machines, app services, storage, Teams workspaces, policies and app installs, then carries them out once an authorised person approves. The launch button opens the configured chatbot destination; this page is an overview, not the chatbot itself.',
+      'TISA, the Technical Information Support Assistant, is a Microsoft Teams bot that gives employees first-line IT support. Message it in Teams, optionally with a screenshot, and it answers from the internal knowledge base, raises a Jira ticket when it cannot resolve the issue, and reports ticket updates when you ask. Open the demo to talk to a simulated version with a fictional knowledge base.',
     icon: 'bot',
     category: 'ai-automation',
-    destination: { type: 'external', url: readUrl(import.meta.env.VITE_TISA_TEAMS_URL) },
+    destination: { type: 'internal', url: '/demo/tisa-assistant' },
+    liveUrl: readUrl(import.meta.env.VITE_TISA_TEAMS_URL),
     status: readStatus(import.meta.env.VITE_TISA_TEAMS_STATUS),
     capabilities: [
       {
-        title: 'Azure setup from a conversation',
-        detail: 'Create and configure resource groups, virtual machines, app services and storage by describing what you need.',
+        title: 'Answers from the knowledge base',
+        detail: 'Finds the matching internal article for password resets, VPN, slow computers, Teams, Outlook and more, and replies with the steps to try.',
       },
       {
-        title: 'Microsoft Teams configuration',
-        detail: 'Create teams and channels, apply policies and install enterprise apps across the tenant.',
+        title: 'Understands screenshots',
+        detail: 'Reads the error you send. A repeat of a known screen reuses the earlier reading, so answers stay consistent.',
       },
       {
-        title: 'Guided enterprise onboarding',
-        detail: 'Walks a new or growing organisation through a secure baseline for Azure and Teams, step by step.',
+        title: 'Triage with category and priority',
+        detail: 'A locally hosted model classifies the issue, sets a priority and writes a short summary before it replies.',
       },
       {
-        title: 'Approval before every change',
-        detail: 'Shows the plan first, waits for an authorised person to confirm, and records who approved what.',
+        title: 'Raises Jira tickets',
+        detail: 'When the fix does not work, one tap creates a ticket in the IT project with the conversation and screenshot attached.',
+      },
+      {
+        title: 'Ticket updates on request',
+        detail: 'Ask "any update on my ticket?" and it reports the latest comment and status for tickets it raised for you.',
+      },
+      {
+        title: 'Escalate to a person',
+        detail: 'A pre-filled email to IT is always one tap away for anything the assistant should not handle.',
       },
     ],
-    launchLabel: 'Open TISA Chatbot',
-    launchNote: 'Opens in a new tab',
+    launchLabel: 'Start chatting',
+    launchNote: 'Simulated chat with a fictional knowledge base. No sign-in needed.',
+    demo: {
+      path: '/demo/tisa-assistant',
+      signIn: false,
+      summary:
+        'A simulated Teams chat with the assistant. Describe an IT problem, attach a sample screenshot, get a triage card with the suggested fix, raise a ticket and ask for updates on it. Replies are scripted against a fictional knowledge base; nothing reaches Teams or Jira.',
+    },
   },
 ]
 

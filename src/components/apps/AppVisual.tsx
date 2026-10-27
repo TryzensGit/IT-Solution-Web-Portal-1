@@ -84,19 +84,17 @@ function AssetsVisual() {
 
 function AssistantVisual() {
   return (
-    <Frame label={`Example of how a conversation with ${brand.assistantName} can look. This is an illustration, not the chatbot.`}>
+    <Frame label={`Example of how a conversation with ${brand.assistantName} can look. This is an illustration, not the assistant.`}>
       <div className="space-y-3 text-sm">
-        <Bubble side="user">
-          Set up an Azure environment for the new Bristol office: one resource group, two VMs and shared storage.
-        </Bubble>
+        <Bubble side="user">My VPN keeps dropping since this morning's update. Screenshot attached.</Bubble>
+        <Bubble side="bot">Thanks, reading the screenshot and checking the knowledge base now.</Bubble>
         <Bubble side="bot">
-          Here is the plan: resource group rg-bristol in UK South, two Standard_D2s_v5 virtual machines with managed
-          disks, and one storage account with a file share. Approve to continue?
+          The screenshot shows "Authentication failed". The article "VPN will not connect" suggests: disconnect and
+          reconnect, restart the laptop so the updated adapter loads, then try a phone hotspot. Did that fix it?
         </Bubble>
-        <Bubble side="user">Approved. Also create a Teams team for the office with General and IT Support channels.</Bubble>
+        <Bubble side="user">Still failing after the restart.</Bubble>
         <Bubble side="bot">
-          Deploying now. The team Bristol Office exists with both channels, and I will post here when the virtual
-          machines are ready.
+          Ticket TBTH-1042 created in Jira with your message and the screenshot. Ask me for an update any time.
         </Bubble>
       </div>
     </Frame>

@@ -1,6 +1,6 @@
 import { useId, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
-import { ArrowRight, ExternalLink, Info, Loader2 } from 'lucide-react'
+import { ArrowRight, ExternalLink, FlaskConical, Info, Loader2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { getCategory, type AppDefinition } from '../../config/applications'
 import { resolveLaunch, useLaunchFeedback } from '../../lib/launch'
@@ -12,6 +12,32 @@ interface Props {
   app: AppDefinition
   /** Hide the "Details" link, e.g. when already on the launch page. */
   hideDetails?: boolean
+}
+
+// The link is stretched over the card with an absolutely positioned ::after.
+// It must not get the press transform: a transform makes the link the
+// containing block for that pseudo-element, which shrinks the hit area
+// between mousedown and mouseup so the click never fires. The card itself
+// animates on launch instead.
+const stretchedClasses = buttonClasses('primary', 'md', 'after:absolute after:inset-0 after:rounded-xl after:content-[""]', {
+  press: false,
+})
+
+function LaunchLabel({ app, launching }: { app: AppDefinition; launching: boolean }) {
+  if (launching) {
+    return (
+      <>
+        <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+        Opening
+      </>
+    )
+  }
+  return (
+    <>
+      {app.launchLabel}
+      <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
+    </>
+  )
 }
 
 /**
@@ -48,39 +74,28 @@ export function ApplicationCard({ app, hideDetails = false }: Props) {
       <p className="mt-2 flex-1 text-[0.95rem] leading-relaxed text-muted">{app.summary}</p>
 
       <div className="mt-6 flex items-center justify-between gap-3">
-        {/*
-          The link is stretched over the card with an absolutely positioned
-          ::after. It must not get the press transform: a transform makes the
-          link the containing block for that pseudo-element, which shrinks the
-          hit area between mousedown and mouseup so the click never fires.
-          The card itself animates on launch instead.
-        */}
         {launch.href ? (
-          <a
-            href={launch.href}
-            target={launch.external ? '_blank' : undefined}
-            rel={launch.external ? 'noopener noreferrer' : undefined}
-            onClick={onLaunch}
-            className={buttonClasses('primary', 'md', 'after:absolute after:inset-0 after:rounded-xl after:content-[""]', {
-              press: false,
-            })}
-            aria-describedby={app.launchNote ? `${messageId}-note` : undefined}
-          >
-            {launching ? (
-              <>
-                <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                Opening
-              </>
-            ) : (
-              <>
-                {app.launchLabel}
-                <ArrowRight
-                  className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
-              </>
-            )}
-          </a>
+          launch.external ? (
+            <a
+              href={launch.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onLaunch}
+              className={stretchedClasses}
+              aria-describedby={app.launchNote ? `${messageId}-note` : undefined}
+            >
+              <LaunchLabel app={app} launching={launching} />
+            </a>
+          ) : (
+            <Link
+              to={launch.href}
+              onClick={onLaunch}
+              className={stretchedClasses}
+              aria-describedby={app.launchNote ? `${messageId}-note` : undefined}
+            >
+              <LaunchLabel app={app} launching={launching} />
+            </Link>
+          )
         ) : (
           <button
             type="button"
@@ -94,30 +109,19 @@ export function ApplicationCard({ app, hideDetails = false }: Props) {
           </button>
         )}
 
-        <span className="relative z-10 flex items-center gap-1">
-          {app.demo && (
-            <Link
-              to={app.demo.path}
-              className="rounded-md px-2 py-1 text-sm font-medium text-muted transition-colors hover:text-text"
-              aria-label={`Try the ${app.name} demo`}
-            >
-              Demo
-            </Link>
-          )}
-          {!hideDetails && (
-            <Link
-              to={`/applications/${app.id}`}
-              className="rounded-md px-2 py-1 text-sm font-medium text-muted transition-colors hover:text-text"
-            >
-              Details
-            </Link>
-          )}
-        </span>
+        {!hideDetails && (
+          <Link
+            to={`/applications/${app.id}`}
+            className="relative z-10 rounded-md px-2 py-1 text-sm font-medium text-muted transition-colors hover:text-text"
+          >
+            Details
+          </Link>
+        )}
       </div>
 
       {app.launchNote && launch.href && (
         <p id={`${messageId}-note`} className="mt-3 inline-flex items-center gap-1.5 text-xs text-faint">
-          {launch.external && <ExternalLink className="size-3" aria-hidden="true" />}
+          {launch.external ? <ExternalLink className="size-3" aria-hidden="true" /> : <FlaskConical className="size-3" aria-hidden="true" />}
           {app.launchNote}
         </p>
       )}
