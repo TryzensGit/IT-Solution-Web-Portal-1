@@ -1,6 +1,6 @@
 # TISA Intelligent IT Solutions Portal
 
-A central web portal for AI-powered IT services. It presents the platform's solutions and gives one front door to three existing applications: User Management, IT Asset Management and the TISA AI Assistant for Microsoft Teams. The portal links to those applications through configurable URLs; it does not recreate them.
+A central web portal for AI-powered IT services. It presents the platform's solutions and gives one front door to three existing applications: User Management, IT Asset Management and the TISA AI Chatbot, which configures and installs enterprise Azure and Microsoft Teams from a conversation. The portal links to the real applications through configurable URLs. It also ships self-contained demo copies of User Management and Asset Management with sample data (see below).
 
 ## Stack
 
@@ -36,7 +36,7 @@ All destinations come from environment variables read in `src/config/application
 | --- | --- |
 | `VITE_USER_MANAGEMENT_URL` | Destination for the User Management application |
 | `VITE_ASSET_MANAGEMENT_URL` | Destination for the Asset Management application |
-| `VITE_TISA_TEAMS_URL` | Destination for the assistant, normally a Microsoft Teams deep link |
+| `VITE_TISA_TEAMS_URL` | Destination for the AI chatbot, normally a Microsoft Teams deep link |
 | `VITE_*_STATUS` (optional) | `available`, `maintenance` or `coming-soon`. Leave empty to hide the indicator |
 | `VITE_BRAND_NAME`, `VITE_BRAND_TAGLINE` (optional) | Override the brand name and tagline |
 | `VITE_CONTACT_NAME` (optional) | Team name on the contact card, default "IT solutions team" |
@@ -74,16 +74,44 @@ The hero shows two kinds of node around the AI core:
 
 To add a service, append `{ label: 'Backup', icon: 'database' }` to `heroServices`. If the icon is new, add it to the map in `src/components/ui/AppIcon.tsx`. Positions are computed, and applications and services are interleaved around one ring so nothing needs to be placed by hand. Six to eight services fit comfortably; beyond that the labels start to crowd on smaller screens, where service labels are hidden below the `md` breakpoint anyway.
 
+## Demo applications
+
+Two of the catalog applications have working demo copies inside the portal, so visitors can try them without access to the real systems:
+
+| Demo | Route | Modelled on |
+| --- | --- | --- |
+| User Management | `/demo/user-management` | The Flask User Management app: active and offboarded users, AD users, cloud-only Entra ID users, AD and M365 groups, license pool and assignments, scheduled tasks, audit log, organisation settings |
+| IT Asset Inventory | `/demo/asset-management` | The Flask Asset Management portal: dashboard with KPI tiles and breakdowns, searchable and filterable asset table with colour flags and column manager, add/edit/details, audit log, settings (colour index, import/export, reference lists, integrations, danger zone) |
+
+How they work:
+
+- Each demo has its own sign-in page with no company logo, like the real applications before branding is uploaded. Microsoft sign-in is shown but disabled.
+- The demo accounts are public by design and listed on each application's page (`/applications/<id>`). They live in `src/config/demo.ts`. `admin` gets settings, audit log, deletes and scheduling; `user` gets day-to-day work only.
+- All data is fictional and held in memory. Changes last for the browser tab (sign-in state is kept in `sessionStorage`) and are discarded afterwards. Nothing contacts the real applications or any backend.
+- The demos reuse the portal's design tokens, so they match the portal in both themes. Shared pieces are in `src/demo/shared` (login page, shell, table, modal, form fields, toasts); each demo has its own `data.ts` with the sample records.
+- They are code-split and only load when opened.
+
+To add a demo to another application, build it under `src/demo/<id>`, add a route in `src/App.tsx` and set `demo: { path, summary }` on the catalog entry. The launch page and launcher card pick it up automatically.
+## Trusted-by logo strip
+
+The home page shows a horizontally scrolling strip of customer wordmarks under the hero. The list lives in `src/config/trusted.ts` and renders from `src/components/home/TrustedBy.tsx`.
+
+**The shipped names are placeholders.** They are fictional small businesses and startups used to shape the design. Replace them with real customers only once each has agreed to be named, and delete any you cannot vouch for. Each entry has a `name`, a short `sector` line (read by screen readers and shown on hover), an `icon` from the small map in the component, and a `wordmark` style (`caps`, `tight`, `light` or `italic`) so the strip does not look like one font repeated. Set the list to empty to hide the section.
+
+Behaviour: the strip pauses on hover, on keyboard focus and with the pause button; speed scales with the number of entries; with `prefers-reduced-motion` it becomes a static wrapping row; the duplicate copy used for looping is hidden from assistive technology.
+
 ## Routes
 
 | Route | Page |
 | --- | --- |
-| `/` | Home: hero, application launcher, solutions, principles, how it works, call to action |
+| `/` | Home: hero, application launcher, chatbot promotion, solutions, principles, how it works, trusted-by strip, contact card, call to action |
 | `/solutions` | Full solutions overview |
 | `/applications` | Application index, with recently opened applications |
 | `/applications/user-management` | User Management overview and launch |
 | `/applications/asset-management` | Asset Management overview and launch |
-| `/applications/tisa-assistant` | TISA AI Assistant overview and launch |
+| `/applications/tisa-assistant` | TISA AI Chatbot overview and launch |
+| `/demo/user-management` | User Management demo (sign-in, then the application) |
+| `/demo/asset-management` | Asset Management demo (sign-in, then the application) |
 
 `/#solutions` and `/#applications` scroll to the matching sections on the home page.
 
@@ -131,7 +159,7 @@ When Microsoft Entra ID or another SSO provider is added, keep tokens out of URL
 - Application status is a configured label, not a live check.
 - "Recently opened" is stored per browser in `localStorage` (application ids only) and is not synced.
 - There is no application search. With three applications it would add noise; the catalog structure supports adding one later.
-- The assistant page describes the chatbot and shows an illustrative conversation. The real assistant runs in Microsoft Teams at the configured URL.
+- The chatbot page and the home page promotion describe the chatbot and show illustrative sessions. The real chatbot runs in Microsoft Teams at the configured URL; the portal does not run it.
 
 ## Recommended next steps
 

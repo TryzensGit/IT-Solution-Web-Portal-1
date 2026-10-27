@@ -20,7 +20,7 @@ describe('routing', () => {
     expect(screen.getByRole('heading', { level: 1, name: /intelligent it/i })).toBeInTheDocument()
     expect(screen.getAllByRole('heading', { level: 3, name: 'User Management' }).length).toBeGreaterThan(0)
     expect(screen.getAllByRole('heading', { level: 3, name: 'Asset Management' }).length).toBeGreaterThan(0)
-    expect(screen.getAllByRole('heading', { level: 3, name: 'TISA AI Assistant' }).length).toBeGreaterThan(0)
+    expect(screen.getAllByRole('heading', { level: 3, name: 'TISA AI Chatbot' }).length).toBeGreaterThan(0)
   })
 
   it('renders the solutions page', () => {

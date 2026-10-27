@@ -234,3 +234,54 @@ body {
     animation: none;
   }
 }
+
+/* Trusted-by logo strip. Two copies of the list scroll by half the track width to loop. */
+.marquee {
+  --marquee-gap: 2.75rem;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+.marquee-track > ul {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--marquee-gap);
+  padding-right: var(--marquee-gap);
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track,
+.marquee[data-paused] .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .marquee-track {
+    width: auto;
+    animation: none;
+  }
+  .marquee-track > ul {
+    flex: 1 1 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    row-gap: 0.875rem;
+    column-gap: 2rem;
+    padding-right: 0;
+  }
+  .marquee-track > ul[aria-hidden] {
+    display: none;
+  }
+}

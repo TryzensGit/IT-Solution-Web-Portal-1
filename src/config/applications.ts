@@ -46,6 +46,11 @@ export interface AppDefinition {
   launchLabel: string
   /** Short note displayed next to the launch action, e.g. where it opens. */
   launchNote?: string
+  /**
+   * Self-contained demo of the application inside the portal, with sample
+   * data and the public demo accounts from src/config/demo.ts.
+   */
+  demo?: { path: string; summary: string }
 }
 
 export const categories: AppCategory[] = [
@@ -89,6 +94,11 @@ export const applications: AppDefinition[] = [
     ],
     launchLabel: 'Open User Management',
     launchNote: 'Opens in a new tab',
+    demo: {
+      path: '/demo/user-management',
+      summary:
+        'A working copy of the User Management screens with a fictional organisation: onboarding and offboarding, AD and Entra ID users, groups, licenses, scheduled tasks and the audit log.',
+    },
   },
   {
     id: 'asset-management',
@@ -114,23 +124,41 @@ export const applications: AppDefinition[] = [
     ],
     launchLabel: 'Open Asset Management',
     launchNote: 'Opens in a new tab',
+    demo: {
+      path: '/demo/asset-management',
+      summary:
+        'A working copy of the IT Asset Inventory with a sample fleet: dashboard, searchable asset table with colour flags, add and edit forms, audit log and settings.',
+    },
   },
   {
     id: 'tisa-assistant',
-    name: 'TISA AI Assistant',
-    summary: 'Explore AI-powered IT assistance through Microsoft Teams.',
+    name: 'TISA AI Chatbot',
+    summary: 'Configure and install enterprise Azure and Microsoft Teams from a chat.',
     description:
-      'A conversational assistant built for Microsoft Teams, so colleagues can ask IT questions where they already work. The launch button opens the configured assistant destination; this page is an overview, not the assistant itself.',
+      'More than an assistant: a chatbot that sets up and configures enterprise Azure environments and Microsoft Teams through conversation. Describe what the organisation needs and it prepares resource groups, virtual machines, app services, storage, Teams workspaces, policies and app installs, then carries them out once an authorised person approves. The launch button opens the configured chatbot destination; this page is an overview, not the chatbot itself.',
     icon: 'bot',
     category: 'ai-automation',
     destination: { type: 'external', url: readUrl(import.meta.env.VITE_TISA_TEAMS_URL) },
     status: readStatus(import.meta.env.VITE_TISA_TEAMS_STATUS),
     capabilities: [
-      { title: 'Conversational IT help', detail: 'Ask questions in plain language from a Teams chat.' },
-      { title: 'Guided troubleshooting', detail: 'Work through common issues step by step before raising a ticket.' },
-      { title: 'Routing to IT support', detail: 'Hand off to the IT team when a question needs a person.' },
+      {
+        title: 'Azure setup from a conversation',
+        detail: 'Create and configure resource groups, virtual machines, app services and storage by describing what you need.',
+      },
+      {
+        title: 'Microsoft Teams configuration',
+        detail: 'Create teams and channels, apply policies and install enterprise apps across the tenant.',
+      },
+      {
+        title: 'Guided enterprise onboarding',
+        detail: 'Walks a new or growing organisation through a secure baseline for Azure and Teams, step by step.',
+      },
+      {
+        title: 'Approval before every change',
+        detail: 'Shows the plan first, waits for an authorised person to confirm, and records who approved what.',
+      },
     ],
-    launchLabel: 'Open TISA Assistant',
+    launchLabel: 'Open TISA Chatbot',
     launchNote: 'Opens in a new tab',
   },
 ]

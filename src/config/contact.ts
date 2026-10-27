@@ -100,7 +100,7 @@ export const setupAudiences: { title: string; description: string; points: strin
       'Onboarding and offboarding for users and devices',
       'Microsoft 365, endpoint and security baselines',
       'Virtual machines, app services and storage',
-      'Automation and the AI assistant in Microsoft Teams',
+      'Automation and the AI chatbot that sets up Azure and Microsoft Teams',
     ],
   },
   {

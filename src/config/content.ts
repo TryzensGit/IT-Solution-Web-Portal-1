@@ -39,9 +39,9 @@ export const solutions: { id: string; title: string; description: string; icon: 
   },
   {
     id: 'ai-integrations',
-    title: 'AI assistants and enterprise integrations',
+    title: 'AI chatbot for Azure and Teams setup',
     description:
-      'Bring assistance into the tools people already use, with integrations that respect existing access controls.',
+      'Configure and install enterprise Azure environments and Microsoft Teams from a conversation, with approvals and existing access controls respected.',
     icon: 'plug',
   },
 ]
@@ -54,7 +54,7 @@ export const capabilities: { title: string; description: string; icon: IconName 
   },
   {
     title: 'Works where people are',
-    description: 'Assistance inside Microsoft Teams and every tool reachable from one portal, rather than another inbox.',
+    description: 'The chatbot works inside Microsoft Teams, and every tool is reachable from one portal rather than another inbox.',
     icon: 'layout',
   },
   {
@@ -92,10 +92,10 @@ export const howItWorks: { title: string; description: string }[] = [
   },
   {
     title: 'Open the right tool',
-    description: 'Launch user management, asset management or the AI assistant. Each opens in its own secure application.',
+    description: 'Launch user management, asset management or the AI chatbot. Each opens in its own secure application.',
   },
   {
     title: 'Let automation carry the routine',
-    description: 'Common requests and questions are handled in workflows and chat, with people stepping in where it matters.',
+    description: 'Common requests, questions and even Azure and Teams setup are handled in workflows and chat, with people approving where it matters.',
   },
 ]

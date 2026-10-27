@@ -1,5 +1,7 @@
 import { Hero } from '../components/home/Hero'
+import { TrustedBy } from '../components/home/TrustedBy'
 import { LauncherSection } from '../components/home/LauncherSection'
+import { ChatbotPromo } from '../components/home/ChatbotPromo'
 import { SolutionsSection } from '../components/home/SolutionsSection'
 import { CapabilitiesSection } from '../components/home/CapabilitiesSection'
 import { HowItWorks } from '../components/home/HowItWorks'
@@ -13,9 +15,11 @@ export function Home() {
     <>
       <Hero />
       <LauncherSection />
+      <ChatbotPromo />
       <SolutionsSection compact />
       <CapabilitiesSection />
       <HowItWorks />
+      <TrustedBy />
       <ContactSection />
       <FinalCta />
     </>

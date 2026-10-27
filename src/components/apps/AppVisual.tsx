@@ -84,15 +84,20 @@ function AssetsVisual() {
 
 function AssistantVisual() {
   return (
-    <Frame label={`Example of how a conversation with ${brand.assistantName} can look. This is an illustration, not the assistant.`}>
+    <Frame label={`Example of how a conversation with ${brand.assistantName} can look. This is an illustration, not the chatbot.`}>
       <div className="space-y-3 text-sm">
-        <Bubble side="user">My laptop keeps disconnecting from the VPN. Anything I can try first?</Bubble>
-        <Bubble side="bot">
-          Let us check two things: whether the VPN client is up to date, and whether the same thing happens on a
-          different network. I can send you the update steps.
+        <Bubble side="user">
+          Set up an Azure environment for the new Bristol office: one resource group, two VMs and shared storage.
         </Bubble>
-        <Bubble side="user">Send them please.</Bubble>
-        <Bubble side="bot">Sent. If it keeps happening, I can raise a ticket with the details we have gathered.</Bubble>
+        <Bubble side="bot">
+          Here is the plan: resource group rg-bristol in UK South, two Standard_D2s_v5 virtual machines with managed
+          disks, and one storage account with a file share. Approve to continue?
+        </Bubble>
+        <Bubble side="user">Approved. Also create a Teams team for the office with General and IT Support channels.</Bubble>
+        <Bubble side="bot">
+          Deploying now. The team Bristol Office exists with both channels, and I will post here when the virtual
+          machines are ready.
+        </Bubble>
       </div>
     </Frame>
   )

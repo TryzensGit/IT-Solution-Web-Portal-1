@@ -12,7 +12,7 @@ const links = [
   { to: '/', label: 'Home', end: true },
   { to: '/solutions', label: 'Solutions' },
   { to: '/applications', label: 'Applications', end: true },
-  { to: '/applications/tisa-assistant', label: 'AI Assistant' },
+  { to: '/applications/tisa-assistant', label: 'AI Chatbot' },
 ]
 
 export function Navbar() {

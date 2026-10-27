@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { ArrowLeft, ArrowRight, Check, ExternalLink, Info, Loader2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, ExternalLink, FlaskConical, Info, Loader2, Play } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { getCategory, type AppDefinition } from '../../config/applications'
+import { demoCredentials, demoNotice } from '../../config/demo'
 import { resolveLaunch, useLaunchFeedback } from '../../lib/launch'
 import { AppIcon } from '../ui/AppIcon'
 import { Button } from '../ui/Button'
@@ -72,6 +73,12 @@ export function AppLaunchPage({ app }: { app: AppDefinition }) {
                 {launch.blocked === 'coming-soon' ? 'Not yet available' : 'Destination not configured'}
               </Button>
             )}
+            {app.demo && (
+              <Button to={app.demo.path} size="lg" variant="secondary">
+                <Play className="size-4" aria-hidden="true" />
+                Try the demo
+              </Button>
+            )}
             {app.launchNote && launch.href && (
               <span className="inline-flex items-center gap-1.5 text-sm text-faint">
                 {launch.external && <ExternalLink className="size-3.5" aria-hidden="true" />}
@@ -110,16 +117,72 @@ export function AppLaunchPage({ app }: { app: AppDefinition }) {
           </ul>
         </div>
 
-        <Reveal className="lg:pt-6">
-          <AppVisual app={app} />
-          {app.icon === 'bot' && (
-            <p className="mt-4 text-sm leading-relaxed text-muted">
-              This page is an overview. The assistant itself runs inside Microsoft Teams and opens from the launch
-              button above.
-            </p>
-          )}
-        </Reveal>
+        <div className="space-y-6">
+          <Reveal className="lg:pt-6">
+            <AppVisual app={app} />
+            {app.icon === 'bot' && (
+              <p className="mt-4 text-sm leading-relaxed text-muted">
+                This page is an overview. The chatbot itself runs inside Microsoft Teams and opens from the launch button
+                above.
+              </p>
+            )}
+          </Reveal>
+          {app.demo && <DemoCard app={app} />}
+        </div>
       </div>
     </div>
+  )
+}
+
+/** Explains the demo environment and lists the public demo accounts. */
+function DemoCard({ app }: { app: AppDefinition }) {
+  if (!app.demo) return null
+  return (
+    <Reveal>
+      <section className="surface-card p-5 sm:p-6" aria-labelledby={`demo-${app.id}`}>
+        <div className="flex items-start gap-3">
+          <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-ai-soft text-ai">
+            <FlaskConical className="size-4" aria-hidden="true" />
+          </span>
+          <div>
+            <h2 id={`demo-${app.id}`} className="text-base font-semibold tracking-tight">
+              Try {app.name} in a demo
+            </h2>
+            <p className="mt-1 text-sm leading-relaxed text-muted">{app.demo.summary}</p>
+          </div>
+        </div>
+
+        <h3 className="mt-5 text-xs font-semibold uppercase tracking-wide text-faint">Demo accounts</h3>
+        <ul className="mt-2 divide-y divide-line rounded-md border border-line">
+          {demoCredentials.map((c) => (
+            <li key={c.role} className="grid gap-x-4 gap-y-1 p-3 text-sm sm:grid-cols-[7.5rem_1fr]">
+              <span className="font-medium">{c.label}</span>
+              <span className="space-y-1">
+                <span className="flex flex-wrap gap-x-4 gap-y-1">
+                  <span>
+                    <span className="text-faint">Username </span>
+                    <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-[0.8rem]">{c.username}</code>
+                  </span>
+                  <span>
+                    <span className="text-faint">Password </span>
+                    <code className="rounded bg-elevated px-1.5 py-0.5 font-mono text-[0.8rem]">{c.password}</code>
+                  </span>
+                </span>
+                <span className="block text-xs leading-relaxed text-muted">{c.access}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Button to={app.demo.path}>
+            <Play className="size-4" aria-hidden="true" />
+            Open the demo
+          </Button>
+          <span className="text-xs text-faint">Opens inside the portal</span>
+        </div>
+        <p className="mt-4 text-xs leading-relaxed text-faint">{demoNotice}</p>
+      </section>
+    </Reveal>
   )
 }

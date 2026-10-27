@@ -94,14 +94,25 @@ export function ApplicationCard({ app, hideDetails = false }: Props) {
           </button>
         )}
 
-        {!hideDetails && (
-          <Link
-            to={`/applications/${app.id}`}
-            className="relative z-10 rounded-md px-2 py-1 text-sm font-medium text-muted transition-colors hover:text-text"
-          >
-            Details
-          </Link>
-        )}
+        <span className="relative z-10 flex items-center gap-1">
+          {app.demo && (
+            <Link
+              to={app.demo.path}
+              className="rounded-md px-2 py-1 text-sm font-medium text-muted transition-colors hover:text-text"
+              aria-label={`Try the ${app.name} demo`}
+            >
+              Demo
+            </Link>
+          )}
+          {!hideDetails && (
+            <Link
+              to={`/applications/${app.id}`}
+              className="rounded-md px-2 py-1 text-sm font-medium text-muted transition-colors hover:text-text"
+            >
+              Details
+            </Link>
+          )}
+        </span>
       </div>
 
       {app.launchNote && launch.href && (
