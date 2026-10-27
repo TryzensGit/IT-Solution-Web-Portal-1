@@ -1,0 +1,236 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+
+/* ------------------------------------------------------------------
+   Design tokens
+   Raw values live on :root / [data-theme]; Tailwind utilities map to
+   them through @theme inline so `bg-surface`, `text-muted` etc. work in
+   both themes without dark: prefixes.
+------------------------------------------------------------------- */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --c-canvas: #080d18;
+  --c-surface: #0d1424;
+  --c-elevated: #111c30;
+  --c-overlay: rgba(13, 20, 36, 0.78);
+  --c-accent: #6485ff;
+  --c-accent-strong: #7d9aff;
+  --c-accent-soft: rgba(100, 133, 255, 0.14);
+  --c-ai: #36d6c5;
+  --c-ai-soft: rgba(54, 214, 197, 0.14);
+  --c-text: #f4f7fc;
+  --c-muted: #9ba9be;
+  --c-faint: #66748b;
+  --c-border: rgba(148, 163, 184, 0.16);
+  --c-border-strong: rgba(148, 163, 184, 0.34);
+  --c-success: #36c995;
+  --c-warning: #f5b942;
+  --c-danger: #f87171;
+  --c-on-accent: #ffffff;
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 12px 32px -16px rgba(2, 6, 23, 0.8);
+  --shadow-card-hover: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 24px 48px -20px rgba(2, 6, 23, 0.9), 0 0 0 1px rgba(100, 133, 255, 0.18);
+  --glow-accent: 0 0 48px -12px rgba(100, 133, 255, 0.55);
+  --hero-glow-a: rgba(100, 133, 255, 0.28);
+  --hero-glow-b: rgba(54, 214, 197, 0.16);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --c-canvas: #f7f9fc;
+  --c-surface: #ffffff;
+  --c-elevated: #ffffff;
+  --c-overlay: rgba(255, 255, 255, 0.82);
+  --c-accent: #4f6fff;
+  --c-accent-strong: #3b5bff;
+  --c-accent-soft: rgba(79, 111, 255, 0.1);
+  --c-ai: #0f9f9a;
+  --c-ai-soft: rgba(15, 159, 154, 0.1);
+  --c-text: #111827;
+  --c-muted: #64748b;
+  --c-faint: #94a3b8;
+  --c-border: #e5eaf2;
+  --c-border-strong: #cdd5e1;
+  --c-success: #1f9d6a;
+  --c-warning: #c48a12;
+  --c-danger: #dc2626;
+  --c-on-accent: #ffffff;
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -16px rgba(15, 23, 42, 0.16);
+  --shadow-card-hover: 0 2px 4px rgba(15, 23, 42, 0.05), 0 20px 40px -20px rgba(15, 23, 42, 0.22), 0 0 0 1px rgba(79, 111, 255, 0.22);
+  --glow-accent: 0 0 40px -14px rgba(79, 111, 255, 0.45);
+  --hero-glow-a: rgba(79, 111, 255, 0.18);
+  --hero-glow-b: rgba(15, 159, 154, 0.12);
+}
+
+@theme inline {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --color-canvas: var(--c-canvas);
+  --color-surface: var(--c-surface);
+  --color-elevated: var(--c-elevated);
+  --color-overlay: var(--c-overlay);
+  --color-accent: var(--c-accent);
+  --color-accent-strong: var(--c-accent-strong);
+  --color-accent-soft: var(--c-accent-soft);
+  --color-ai: var(--c-ai);
+  --color-ai-soft: var(--c-ai-soft);
+  --color-text: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-faint: var(--c-faint);
+  --color-line: var(--c-border);
+  --color-line-strong: var(--c-border-strong);
+  --color-success: var(--c-success);
+  --color-warning: var(--c-warning);
+  --color-danger: var(--c-danger);
+  --color-on-accent: var(--c-on-accent);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-card-hover: var(--shadow-card-hover);
+  --shadow-glow: var(--glow-accent);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  @apply bg-canvas text-text font-sans antialiased;
+  font-feature-settings: "cv11", "ss01", "ss03";
+  transition: background-color 260ms var(--ease-standard), color 260ms var(--ease-standard);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--c-accent);
+  color: var(--c-on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Give section anchors room under the sticky nav */
+[id] {
+  scroll-margin-top: 88px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Reusable component layers
+------------------------------------------------------------------- */
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-[1200px] px-5 sm:px-8;
+  }
+
+  .surface-card {
+    @apply rounded-xl border border-line bg-surface shadow-card;
+    transition:
+      transform 220ms var(--ease-out-quart),
+      border-color 220ms var(--ease-standard),
+      box-shadow 220ms var(--ease-standard),
+      background-color 260ms var(--ease-standard);
+  }
+
+  .surface-card-interactive:hover,
+  .surface-card-interactive:focus-within {
+    @apply -translate-y-0.5 border-line-strong shadow-card-hover;
+  }
+
+  .link-nav {
+    @apply relative rounded-md px-3 py-2 text-[0.9rem] font-medium text-muted transition-colors duration-200 hover:text-text;
+  }
+  .link-nav[aria-current="page"] {
+    @apply text-text;
+  }
+  .link-nav[aria-current="page"]::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 2px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--c-accent);
+  }
+
+  .status-dot {
+    @apply inline-block size-1.5 rounded-full;
+  }
+  .status-dot-live {
+    position: relative;
+  }
+  .status-dot-live::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 9999px;
+    border: 1px solid currentColor;
+    opacity: 0;
+    animation: pulse-ring 2.4s var(--ease-standard) infinite;
+  }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  70% { transform: scale(1.3); opacity: 0; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+
+/* Hero network animation: dashes travel along connection lines */
+@keyframes flow {
+  to { stroke-dashoffset: -40; }
+}
+.hero-flow {
+  stroke-dasharray: 2 18;
+  animation: flow 3.2s linear infinite;
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.04); }
+}
+.hero-core {
+  transform-origin: center;
+  animation: breathe 5s var(--ease-standard) infinite;
+}
+@keyframes drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.hero-node {
+  animation: drift 6s var(--ease-standard) infinite;
+}
+.hero-node:nth-child(2n) { animation-delay: -2s; }
+.hero-node:nth-child(3n) { animation-delay: -4s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-flow, .hero-core, .hero-node, .status-dot-live::after {
+    animation: none;
+  }
+}

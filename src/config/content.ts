@@ -1,0 +1,86 @@
+import type { IconName } from '../components/ui/AppIcon'
+
+/** Service categories. These describe what the platform covers, not live features. */
+export const solutions: { id: string; title: string; description: string; icon: IconName }[] = [
+  {
+    id: 'ai-support',
+    title: 'AI-powered IT support',
+    description:
+      'Answer common questions and guide people through fixes in chat, so the service desk spends its time on what needs a person.',
+    icon: 'message',
+  },
+  {
+    id: 'process-automation',
+    title: 'IT process automation',
+    description:
+      'Turn repeatable requests such as onboarding, access changes and device setup into reliable, auditable workflows.',
+    icon: 'workflow',
+  },
+  {
+    id: 'user-management',
+    title: 'Intelligent user management',
+    description:
+      'Keep user records, roles and lifecycle events consistent across systems from one place.',
+    icon: 'users',
+  },
+  {
+    id: 'asset-lifecycle',
+    title: 'IT asset lifecycle management',
+    description:
+      'Track hardware and software from purchase to retirement with a clear picture of who has what.',
+    icon: 'monitor',
+  },
+  {
+    id: 'm365-endpoint',
+    title: 'Microsoft 365 and endpoint automation',
+    description:
+      'Standardise configuration and routine administration across Microsoft 365 and managed devices.',
+    icon: 'cloud',
+  },
+  {
+    id: 'ai-integrations',
+    title: 'AI assistants and enterprise integrations',
+    description:
+      'Bring assistance into the tools people already use, with integrations that respect existing access controls.',
+    icon: 'plug',
+  },
+]
+
+export const capabilities: { title: string; description: string; icon: IconName }[] = [
+  {
+    title: 'People stay in control',
+    description: 'Automation prepares and routes work. Sensitive changes still need an authorised person to approve them.',
+    icon: 'shield',
+  },
+  {
+    title: 'Works where people are',
+    description: 'Assistance inside Microsoft Teams and every tool reachable from one portal, rather than another inbox.',
+    icon: 'layout',
+  },
+  {
+    title: 'Built to extend',
+    description: 'New applications are added through configuration, so the portal grows with your IT estate.',
+    icon: 'layers',
+  },
+  {
+    title: 'Access stays with the app',
+    description: 'Each application enforces its own sign-in and permissions. The portal never bypasses them.',
+    icon: 'lock',
+  },
+]
+
+/** A real sequence, so numbering is appropriate here. */
+export const howItWorks: { title: string; description: string }[] = [
+  {
+    title: 'Start from the portal',
+    description: 'One address for everything IT. Find the application or service you need without hunting for links.',
+  },
+  {
+    title: 'Open the right tool',
+    description: 'Launch user management, asset management or the AI assistant. Each opens in its own secure application.',
+  },
+  {
+    title: 'Let automation carry the routine',
+    description: 'Common requests and questions are handled in workflows and chat, with people stepping in where it matters.',
+  },
+]
