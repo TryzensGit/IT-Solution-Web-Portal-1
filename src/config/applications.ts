@@ -71,16 +71,20 @@ export const applications: AppDefinition[] = [
   {
     id: 'user-management',
     name: 'User Management',
-    summary: 'Manage user-related IT operations through a centralized application.',
+    summary: 'Onboard and offboard people, and manage the IT services they depend on.',
     description:
-      'A single place for the day-to-day work of managing people in your IT estate. Open the application to view and administer user records according to the permissions you already have.',
+      'One place for the joiner and leaver work that keeps IT running: bringing new people on, giving them what they need, and closing everything down cleanly when they leave. Open the application to work with user records according to the permissions you already have.',
     icon: 'users',
     category: 'identity-access',
     destination: { type: 'external', url: readUrl(import.meta.env.VITE_USER_MANAGEMENT_URL) },
     status: readStatus(import.meta.env.VITE_USER_MANAGEMENT_STATUS),
     capabilities: [
-      { title: 'Centralized user records', detail: 'Find and review user information from one application.' },
-      { title: 'Operational workflows', detail: 'Carry out routine user-related IT tasks in a consistent way.' },
+      { title: 'Onboarding', detail: 'Set up new users with the accounts, devices and services they need from day one.' },
+      { title: 'Offboarding', detail: 'Close access, recover equipment and retire services when someone leaves.' },
+      {
+        title: 'Service management',
+        detail: 'Support for security, enterprise app services, automation and other services tied to a user.',
+      },
       { title: 'Role-aware access', detail: 'The application enforces its own authentication and permissions.' },
     ],
     launchLabel: 'Open User Management',
@@ -89,17 +93,24 @@ export const applications: AppDefinition[] = [
   {
     id: 'asset-management',
     name: 'Asset Management',
-    summary: 'Access tools for managing and tracking IT assets.',
+    summary: 'Track laptops, servers, workstations, mobile devices and the services behind them.',
     description:
-      'Track hardware, software and the people they belong to across their lifecycle. Open the application to work with the asset inventory your team already maintains.',
+      'The inventory of what your organisation runs on, from the laptop on a desk to the servers, virtual machines and storage behind the scenes. Open the application to onboard, assign, track and retire IT resources.',
     icon: 'monitor',
     category: 'endpoint-management',
     destination: { type: 'external', url: readUrl(import.meta.env.VITE_ASSET_MANAGEMENT_URL) },
     status: readStatus(import.meta.env.VITE_ASSET_MANAGEMENT_STATUS),
     capabilities: [
-      { title: 'Asset inventory', detail: 'See what devices and licences exist and who they are assigned to.' },
-      { title: 'Lifecycle tracking', detail: 'Follow assets from procurement through assignment to retirement.' },
-      { title: 'Reporting', detail: "Use the application's own views to answer questions about your estate." },
+      {
+        title: 'Devices and hardware',
+        detail: 'Laptops, servers, workstations and mobile devices, with who they are assigned to.',
+      },
+      {
+        title: 'Infrastructure services',
+        detail: 'Virtual machines, app services, storage, security and automation services alongside physical assets.',
+      },
+      { title: 'Onboarding and offboarding', detail: 'Bring resources into service and retire them with a clear record.' },
+      { title: 'Lifecycle tracking', detail: 'Follow each resource from procurement through assignment to retirement.' },
     ],
     launchLabel: 'Open Asset Management',
     launchNote: 'Opens in a new tab',
@@ -109,7 +120,7 @@ export const applications: AppDefinition[] = [
     name: 'TISA AI Assistant',
     summary: 'Explore AI-powered IT assistance through Microsoft Teams.',
     description:
-      'A conversational assistant that lives inside Microsoft Teams, so colleagues can ask IT questions where they already work. The launch button opens the configured Teams destination; this page is an overview, not the assistant itself.',
+      'A conversational assistant built for Microsoft Teams, so colleagues can ask IT questions where they already work. The launch button opens the configured assistant destination; this page is an overview, not the assistant itself.',
     icon: 'bot',
     category: 'ai-automation',
     destination: { type: 'external', url: readUrl(import.meta.env.VITE_TISA_TEAMS_URL) },
@@ -119,8 +130,8 @@ export const applications: AppDefinition[] = [
       { title: 'Guided troubleshooting', detail: 'Work through common issues step by step before raising a ticket.' },
       { title: 'Routing to IT support', detail: 'Hand off to the IT team when a question needs a person.' },
     ],
-    launchLabel: 'Launch in Microsoft Teams',
-    launchNote: 'Opens in Microsoft Teams',
+    launchLabel: 'Open TISA Assistant',
+    launchNote: 'Opens in a new tab',
   },
 ]
 

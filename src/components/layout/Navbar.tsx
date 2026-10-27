@@ -56,6 +56,9 @@ export function Navbar() {
               {l.label}
             </NavLink>
           ))}
+          <Link to="/#contact" className="link-nav whitespace-nowrap">
+            Contact
+          </Link>
         </div>
 
         <div className="flex items-center gap-2">
@@ -100,6 +103,9 @@ export function Navbar() {
                   {l.label}
                 </NavLink>
               ))}
+              <Link to="/#contact" className="link-nav py-3 text-base">
+                Contact
+              </Link>
               <Button to="/applications" size="lg" className="mt-2">
                 Open an application
               </Button>

@@ -20,14 +20,14 @@ export const solutions: { id: string; title: string; description: string; icon: 
     id: 'user-management',
     title: 'Intelligent user management',
     description:
-      'Keep user records, roles and lifecycle events consistent across systems from one place.',
+      'Onboard and offboard people consistently, with the accounts, devices and services each person needs.',
     icon: 'users',
   },
   {
     id: 'asset-lifecycle',
     title: 'IT asset lifecycle management',
     description:
-      'Track hardware and software from purchase to retirement with a clear picture of who has what.',
+      'Track laptops, servers, workstations, mobile devices, virtual machines and storage from purchase to retirement.',
     icon: 'monitor',
   },
   {
@@ -67,6 +67,21 @@ export const capabilities: { title: string; description: string; icon: IconName 
     description: 'Each application enforces its own sign-in and permissions. The portal never bypasses them.',
     icon: 'lock',
   },
+]
+
+/**
+ * Services shown as the inner ring of the hero visual. These are
+ * illustrative nodes, not launchable applications: add an application to
+ * src/config/applications.ts instead if it has its own destination.
+ * Six to eight entries fit comfortably; fewer is fine.
+ */
+export const heroServices: { label: string; icon: IconName }[] = [
+  { label: 'Security', icon: 'shield' },
+  { label: 'Enterprise apps', icon: 'layout' },
+  { label: 'Virtual machines', icon: 'server' },
+  { label: 'App services', icon: 'cloud' },
+  { label: 'Storage', icon: 'database' },
+  { label: 'Automation', icon: 'workflow' },
 ]
 
 /** A real sequence, so numbering is appropriate here. */

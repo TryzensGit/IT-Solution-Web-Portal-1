@@ -39,6 +39,13 @@ All destinations come from environment variables read in `src/config/application
 | `VITE_TISA_TEAMS_URL` | Destination for the assistant, normally a Microsoft Teams deep link |
 | `VITE_*_STATUS` (optional) | `available`, `maintenance` or `coming-soon`. Leave empty to hide the indicator |
 | `VITE_BRAND_NAME`, `VITE_BRAND_TAGLINE` (optional) | Override the brand name and tagline |
+| `VITE_CONTACT_NAME` (optional) | Team name on the contact card, default "IT solutions team" |
+| `VITE_CONTACT_EMAIL` (optional) | Email for setup enquiries; rendered as a mailto link with a prefilled subject |
+| `VITE_CONTACT_PHONE` (optional) | Phone number for setup enquiries; rendered as a tel link |
+| `VITE_CONTACT_URL` (optional) | HTTPS link: a LinkedIn profile, a Teams chat link or a booking page. The button icon is chosen from the host |
+| `VITE_CONTACT_URL_LABEL` (optional) | Label for that link. Defaults to "Connect on LinkedIn", "Chat in Microsoft Teams" or "Book a conversation" depending on the link |
+
+The contact card (home page and `/solutions`, anchor `#contact`) shows whichever channels are set. With none set it shows a "not configured" message rather than invented details. Values are validated in `src/config/contact.ts`.
 
 Rules enforced by `src/lib/url.ts`:
 
@@ -56,7 +63,16 @@ Status labels are static configuration. The portal does not perform live health 
 2. If it needs a new icon, add it to the map in `src/components/ui/AppIcon.tsx`.
 3. Add the matching `VITE_..._URL` variable to `.env.example` and your `.env`.
 
-The launcher grid, the `/applications` index, the footer and the `/applications/<id>` launch page are all generated from the catalog. No new route or page component is needed. Categories appear on the index only once more than one category has applications.
+The launcher grid, the `/applications` index, the footer, the `/applications/<id>` launch page and the hero visual are all generated from the catalog. No new route or page component is needed. Categories appear on the index only once more than one category has applications.
+
+## Adding services to the hero visual
+
+The hero shows two kinds of node around the AI core:
+
+- **Applications** (prominent chips with flowing lines) come from the catalog above. The first six are drawn; all of them still appear in the launcher.
+- **Services** (small muted chips with dashed lines) come from the `heroServices` list in `src/config/content.ts`. These are illustrative labels for capabilities such as Security, Storage or Automation, not launchable destinations.
+
+To add a service, append `{ label: 'Backup', icon: 'database' }` to `heroServices`. If the icon is new, add it to the map in `src/components/ui/AppIcon.tsx`. Positions are computed, and applications and services are interleaved around one ring so nothing needs to be placed by hand. Six to eight services fit comfortably; beyond that the labels start to crowd on smaller screens, where service labels are hidden below the `md` breakpoint anyway.
 
 ## Routes
 

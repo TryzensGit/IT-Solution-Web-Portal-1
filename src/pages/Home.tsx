@@ -3,6 +3,7 @@ import { LauncherSection } from '../components/home/LauncherSection'
 import { SolutionsSection } from '../components/home/SolutionsSection'
 import { CapabilitiesSection } from '../components/home/CapabilitiesSection'
 import { HowItWorks } from '../components/home/HowItWorks'
+import { ContactSection } from '../components/home/ContactSection'
 import { FinalCta } from '../components/home/FinalCta'
 import { usePageTitle } from '../lib/usePageTitle'
 
@@ -15,6 +16,7 @@ export function Home() {
       <SolutionsSection compact />
       <CapabilitiesSection />
       <HowItWorks />
+      <ContactSection />
       <FinalCta />
     </>
   )

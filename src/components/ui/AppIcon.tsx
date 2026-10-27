@@ -1,12 +1,14 @@
 import {
   Bot,
   Cloud,
+  Database,
   Layers,
   LayoutGrid,
   Lock,
   MessageCircle,
   Monitor,
   Plug,
+  Server,
   ShieldCheck,
   Users,
   Workflow,
@@ -29,6 +31,8 @@ const icons = {
   layout: LayoutGrid,
   layers: Layers,
   lock: Lock,
+  server: Server,
+  database: Database,
 } as const
 
 export type IconName = keyof typeof icons

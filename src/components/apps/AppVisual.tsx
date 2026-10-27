@@ -1,4 +1,4 @@
-import { Bot, Laptop, Monitor, Smartphone, UserRound } from 'lucide-react'
+import { Bot, Laptop, Monitor, Server, Smartphone, UserRound } from 'lucide-react'
 import type { AppDefinition } from '../../config/applications'
 import { brand } from '../../config/brand'
 
@@ -35,7 +35,7 @@ function Frame({ children, label }: { children: React.ReactNode; label: string }
 }
 
 function UsersVisual() {
-  const rows = ['Directory', 'Roles', 'Access requests', 'Lifecycle events']
+  const rows = ['Onboarding', 'Offboarding', 'Services', 'Access and security']
   return (
     <Frame label="Illustration of a user record list">
       <ul className="space-y-2.5">
@@ -56,12 +56,13 @@ function UsersVisual() {
 function AssetsVisual() {
   const devices = [
     { icon: Laptop, label: 'Laptops' },
-    { icon: Monitor, label: 'Displays' },
-    { icon: Smartphone, label: 'Phones' },
+    { icon: Server, label: 'Servers' },
+    { icon: Monitor, label: 'Workstations' },
+    { icon: Smartphone, label: 'Mobile' },
   ]
   return (
     <Frame label="Illustration of asset categories and their lifecycle">
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {devices.map(({ icon: Icon, label }) => (
           <div key={label} className="flex flex-col items-center gap-2 rounded-md border border-line bg-elevated p-4">
             <Icon className="size-6 text-accent" aria-hidden="true" />
