@@ -166,3 +166,4 @@ When Microsoft Entra ID or another SSO provider is added, keep tokens out of URL
 3. Decide on authentication (for example Microsoft Entra ID) and whether launch links should be protected.
 4. Add a health-check integration only if a reliable status endpoint exists.
 5. Add a search or command palette once the catalog grows beyond a handful of applications.
+"# IT-Solution-Web-Portal" 
